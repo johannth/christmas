@@ -2,75 +2,14 @@
   background-color: #000;
   width: 100%;
   height: 100%;
-};
+}
 
 .App {
-  text-align: center;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
-.Card {
-  width: 500px;
-  height: 334px;
-  position: relative;
-  perspective: 1000;
-  
-  /* float: left; */
-  margin: 100px auto;
-  cursor: pointer;
-}
-
-.Card:hover .CardFace {
-  transition: all 0.3s ease-out;
-}
-
-.CardFace {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: all 0.5s ease-out;
-  transform-origin: 0 0;
-}
-
-.CardFront {
-  z-index: 3;
-  backface-visibility: hidden; 
-}
-
-.CardFrontBack {
-  z-index: 2;
-  backface-visibility: visible; 
-  background-color: green;
-}
-
-.CardFrontImage {
-  width: 100%;
-  height: 100%;
-}
-
-.CardBack {
-  background: #9dcc78;
-  z-index: 1;
-}
-
-.Card:hover .CardFront {
-  transform: rotateY(-35deg);  
-}
-
-.Card:hover .CardFrontBack {
-  transform: rotateY(-35deg);  
-}
-
-.Card:active .CardFront{
-  transform: rotateY(-165deg);  
-}
-
-.Card:active .CardFrontBack {
-  transform: rotateY(-165deg);  
-}
-
-.Card:active .CardBack {
-  /* transform: rotateY(-15deg);   */
-}

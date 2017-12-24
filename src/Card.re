@@ -61,8 +61,16 @@ let make = (~path: option(string), _children) => {
     switch (state.openState, action) {
     | (Initial, Open)
     | (Initial, Close)
-    | (Closed, Open) => ReasonReact.Update({...state, openState: Open})
-    | (Open, Close) => ReasonReact.Update({...state, openState: Closed})
+    | (Closed, Open) =>
+      ReasonReact.UpdateWithSideEffects(
+        {...state, openState: Open},
+        ((_self) => Analytics.(Event.track(FlipCardEvent.(make(Side.Front, Side.Open)))))
+      )
+    | (Open, Close) =>
+      ReasonReact.UpdateWithSideEffects(
+        {...state, openState: Closed},
+        ((_self) => Analytics.(Event.track(FlipCardEvent.(make(Side.Open, Side.Front)))))
+      )
     | (Closed, Close)
     | (Open, Open) => ReasonReact.NoUpdate
     | (_, DidLoadContent(lines)) => ReasonReact.Update({...state, lines})

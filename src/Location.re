@@ -1,0 +1,1 @@
+[@bs.scope ("window", "location")] [@bs.val] external pathname : string = "pathname";

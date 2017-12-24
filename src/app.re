@@ -1,13 +1,13 @@
 [%bs.raw {|require('./app.css')|}];
 
-module Location = {
-  [@bs.scope ("window", "location")] [@bs.val] external pathname : string = "pathname";
-};
-
 let component = ReasonReact.statelessComponent("App");
 
 let make = (_children) => {
   ...component,
+  didMount: (_self) => {
+    Analytics.(Event.track(OpenCardEvent.make()));
+    ReasonReact.NoUpdate
+  },
   render: (_self) =>
     <div className="Background">
       <Snow />

@@ -15,13 +15,13 @@ type openState =
 
 type state = {
   openState,
-  lines: option(list(string))
+  lines: array(string)
 };
 
 type action =
   | Open
   | Close
-  | DidLoadContent(list(string));
+  | DidLoadContent(array(string));
 
 let classNameFromState = (state: openState) =>
   switch state {
@@ -31,18 +31,32 @@ let classNameFromState = (state: openState) =>
   };
 
 module Fetch = {
+  exception ResponseError(unit);
   type response;
   type body;
+  [@bs.get] external ok : response => bool = "ok";
   [@bs.get] external body : response => body = "body";
   [@bs.send] external text : response => Js.Promise.t(string) = "text";
   [@bs.val] external fetch : string => Js.Promise.t(response) = "fetch";
 };
 
+[@bs.send.pipe : string] external split : string => array(string) = "split";
+
 let component = ReasonReact.reducerComponent("Card");
 
-let make = (~path, _children) => {
+let make = (~path: option(string), _children) => {
   ...component,
-  initialState: () => {lines: None, openState: Initial},
+  initialState: () => {
+    lines: [|
+      {j|Kæru vinir!|j},
+      {j|Gleðileg jól og farsælt komandi ár!|j},
+      {j|Við þökkum kærlega fyrir árið sem líður í aldana skaut.|j},
+      {j|Við vonum að næsta ár verði fullt af ævintýrum|j},
+      {j|Ástarkveðjur,|j},
+      {j|Stefanía & Jói|j}
+    |],
+    openState: Initial
+  },
   reducer: (action, state) =>
     switch (state.openState, action) {
     | (Initial, Open)
@@ -51,20 +65,30 @@ let make = (~path, _children) => {
     | (Open, Close) => ReasonReact.Update({...state, openState: Closed})
     | (Closed, Close)
     | (Open, Open) => ReasonReact.NoUpdate
-    | (_, DidLoadContent(lines)) => ReasonReact.Update({...state, lines: Some(lines)})
+    | (_, DidLoadContent(lines)) => ReasonReact.Update({...state, lines})
     },
   didMount: (self) => {
-    Fetch.(
-      fetch({j|content/$path|j})
-      |> Js.Promise.then_((response) => response |> text)
-      |> Js.Promise.then_(
-           (text) => {
-             self.reduce(() => DidLoadContent([text]), ());
-             Js.Promise.resolve()
-           }
-         )
-      |> ignore
-    );
+    switch path {
+    | Some(path) =>
+      Fetch.(
+        fetch({j|content$path|j})
+        |> Js.Promise.then_(
+             (response) =>
+               Fetch.ok(response) ? response |> text : Js.Promise.reject(ResponseError())
+           )
+        |> Js.Promise.then_(
+             (text) =>
+               Js.String.indexOf("<html", text) != (-1) ?
+                 Js.Promise.reject(ResponseError()) :
+                 {
+                   self.reduce(() => DidLoadContent(Js.String.split("\n", text)), ());
+                   Js.Promise.resolve()
+                 }
+           )
+        |> ignore
+      )
+    | None => ()
+    };
     ReasonReact.NoUpdate
   },
   render: (self) =>
@@ -73,7 +97,9 @@ let make = (~path, _children) => {
         className="CardFront CardFace"
         style=(ReactDOMRe.Style.make(~backgroundImage={j|url($frontImagePaper)|j}, ()))
         onClick=(self.reduce((_event) => Open))>
+        <h1> (ReasonReact.stringToElement({js|Gleðileg jól!|js})) </h1>
         <img className="CardFrontImage" src=frontImage />
+        <h2> (ReasonReact.stringToElement({js|Vúhú & jibbí!|js})) </h2>
       </div>
       <div
         className="CardFrontBack CardFace"
@@ -86,18 +112,15 @@ let make = (~path, _children) => {
         onClick=(self.reduce((_event) => Close))>
         <div>
           (
-            switch self.state.lines {
-            | Some(lines) =>
-              ReasonReact.arrayToElement(
-                lines
-                |> Array.of_list
-                |> Array.mapi(
-                     (i, line) =>
-                       <p key=(string_of_int(i))> (ReasonReact.stringToElement(line)) </p>
-                   )
-              )
-            | None => ReasonReact.nullElement
-            }
+            ReasonReact.arrayToElement(
+              self.state.lines
+              |> Array.mapi(
+                   (i, line) =>
+                     <p key=(string_of_int(i)) className="Paragraph">
+                       (ReasonReact.stringToElement(line))
+                     </p>
+                 )
+            )
           )
         </div>
         <div className="CardBackShadow" />

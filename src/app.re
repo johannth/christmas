@@ -11,6 +11,15 @@ let make = (_children) => {
   render: (_self) =>
     <div className="Background">
       <Snow />
-      <div className="App"> <Card path=Location.pathname /> </div>
+      <div className="App">
+        <Card
+          path=(
+            switch Location.pathname {
+            | "/" => None
+            | pathname => Some(pathname)
+            }
+          )
+        />
+      </div>
     </div>
 };

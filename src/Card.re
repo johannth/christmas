@@ -51,9 +51,9 @@ let make = (~path: option(string), _children) => {
       {j|Kæru vinir!|j},
       {j|Gleðileg jól og farsælt komandi ár!|j},
       {j|Við þökkum kærlega fyrir árið sem líður í aldana skaut.|j},
-      {j|Við vonum að næsta ár verði fullt af ævintýrum|j},
+      {j|Við vonum að næsta ár verði fullt af ævintýrum. Það er alltaf heitt á könnunni á Bragagötu.|j},
       {j|Ástarkveðjur,|j},
-      {j|Stefanía & Jói|j}
+      {j|Stefanía, Jói & Súkkan|j}
     |],
     openState: Initial
   },

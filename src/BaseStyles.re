@@ -1,0 +1,1 @@
+let mediaQuery = "screen and (max-width: 500px)";

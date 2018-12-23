@@ -1,0 +1,2 @@
+yarn webpack:production
+firebase deploy

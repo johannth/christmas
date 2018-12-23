@@ -1,22 +1,37 @@
 {
-	"name": "christmas",
-	"version": "0.1.0",
-	"private": true,
-	"devDependencies": {
-		"bs-jest": "^0.2.0",
-		"react": "^16.2.0",
-		"react-dom": "^16.2.0",
-		"reason-react": "^0.3.0",
-		"reason-scripts": "0.8.0"
-	},
-	"dependencies": {
-		"react-snow-effect": "^1.2.0"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject",
-		"prepare": "npm link bs-platform"
-	}
+  "name": "christmas",
+  "version": "0.2.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "watch": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack -w",
+    "webpack:production": "NODE_ENV=production webpack",
+    "server": "webpack-dev-server",
+    "deploy": ".scripts/deploy.sh"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bs-css": "^8.0.0",
+    "react": "16.7.0",
+    "react-dom": "16.7.0",
+    "react-snow-effect": "1.2.0",
+    "reason-react": ">=0.4.0"
+  },
+  "devDependencies": {
+    "bs-platform": "^4.0.14",
+    "copy-webpack-plugin": "^4.6.0",
+    "file-loader": "3.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "reason-cli": "3.3.3-macos-1",
+    "url-loader": "1.1.2",
+    "webpack": "4.28.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.8"
+  }
 }
